@@ -23,9 +23,8 @@ causal_dot_product_cuda = mod_causal_dot_product_cuda.fast_weight_forward
 causal_dot_backward_cuda = mod_causal_dot_backward_cuda.fast_weight_backward
 
 
-class FastWeightMemory(torch.autograd.Function):
-    """Compute the weighted sum of values but attending only to previous
-    values."""
+class DeltaFastWeight(torch.autograd.Function):
+    """Fast weight using the delta update rule."""
     dot = {
         # "cpu": causal_dot_product_cpu,
         "cuda": causal_dot_product_cuda
@@ -54,7 +53,7 @@ class FastWeightMemory(torch.autograd.Function):
         V_old = torch.zeros((N, H, L, M), device=device, dtype=Q.dtype)
         V_insert = torch.zeros((N, H, L, M), device=device, dtype=Q.dtype)
 
-        FastWeightMemory.dot[device.type](
+        DeltaFastWeight.dot[device.type](
             Q.data,
             K.data,
             V.data,
@@ -82,7 +81,7 @@ class FastWeightMemory(torch.autograd.Function):
 
         assert Q.device.type is not "cpu"
         # Compute the gradients
-        FastWeightMemory.dot_backward[Q.device.type](
+        DeltaFastWeight.dot_backward[Q.device.type](
             Q.data,
             K.data,
             V.data,
@@ -101,7 +100,7 @@ class FastWeightMemory(torch.autograd.Function):
 
 
 # Alias the autograd functions to python style snake case naming
-fast_weight_memory = FastWeightMemory.apply
+fast_weight_delta = DeltaFastWeight.apply
 
 
 if __name__ == '__main__':
@@ -150,7 +149,7 @@ if __name__ == '__main__':
 
     W1 = torch.zeros(bsz, n_head, d_head, v_dim, device='cuda')
     print("Forwarding custom kernel...")
-    out1 = fast_weight_memory(q1, k1, v1, beta1, W1)
+    out1 = fast_weight_delta(q1, k1, v1, beta1, W1)
     print("done.")
 
     # compute using torch

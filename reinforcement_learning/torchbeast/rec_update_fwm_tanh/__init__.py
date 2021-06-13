@@ -28,7 +28,7 @@ causal_dot_product_cuda = fwd_cuda.rec_update_fwm_tanh_forward
 causal_dot_backward_cuda = bwd_cuda.rec_update_fwm_tanh_backward
 
 
-class FastWeightMemoryRecUpdateTanh(torch.autograd.Function):
+class FastWeightRecUpdateTanh(torch.autograd.Function):
     """Compute the weighted sum of values but attending only to previous
     values."""
     dot = {
@@ -65,7 +65,7 @@ class FastWeightMemoryRecUpdateTanh(torch.autograd.Function):
 
         h_init = h0.detach().clone()  # for backward pass.
 
-        FastWeightMemoryRecUpdateTanh.dot[device.type](
+        FastWeightRecUpdateTanh.dot[device.type](
             qx.data,
             kx.data,
             vx.data,
@@ -108,7 +108,7 @@ class FastWeightMemoryRecUpdateTanh(torch.autograd.Function):
         out_delayed = torch.tanh(torch.cat([h0, out[:, :, :-1]], dim=2))
 
         # Compute the gradients
-        FastWeightMemoryRecUpdateTanh.dot_backward[out.device.type](
+        FastWeightRecUpdateTanh.dot_backward[out.device.type](
             Q.data,
             K.data,
             V.data,
@@ -136,7 +136,7 @@ class FastWeightMemoryRecUpdateTanh(torch.autograd.Function):
 
 
 # Alias the autograd functions to python style snake case naming
-rec_update_fwm_tanh = FastWeightMemoryRecUpdateTanh.apply
+rec_update_fwm_tanh = FastWeightRecUpdateTanh.apply
 
 
 if __name__ == '__main__':

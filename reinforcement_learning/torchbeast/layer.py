@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from torchbeast.fast_weight import fast_weight_memory
+from torchbeast.fast_weight import fast_weight_delta
 from torchbeast.fast_transformers import fast_weight_sum
 from torchbeast.rec_update_fwm_tanh import rec_update_fwm_tanh
 from torchbeast.fast_weight_rnn_v2 import fast_rnn_v2
@@ -130,7 +130,7 @@ class FastFFlayer(nn.Module):
         self.dim_head = dim_head
         self.in_dim = in_dim
 
-        self.fw_layer = fast_weight_memory
+        self.fw_layer = fast_weight_delta
 
         self.slow_net = nn.Linear(
             in_dim, num_head * (3 * dim_head + 1), bias=False)
@@ -194,7 +194,7 @@ class FastRNNlayer(nn.Module):
         self.num_head = num_head
         self.dim_head = dim_head
         self.in_dim = in_dim
-        self.fw_layer = fast_weight_memory
+        self.fw_layer = fast_weight_delta
         self.rec_fw_layer = fast_rnn_v2
 
         self.slow_net = nn.Linear(
