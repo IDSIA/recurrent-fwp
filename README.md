@@ -25,12 +25,11 @@ Such a line is already included in the example scripts we provide. Please change
 Important: separate paths should be used for different tasks (i.e. here, one for language modeling, one for code execution, one for ListOps, and one for RL).
 
 ## BibTex
-Coming soon
 ```
-@article{irie2021rfwp,
+@article{irie2021going,
       title={Going Beyond Linear Transformers with Recurrent Fast Weight Programmers}, 
       author={Kazuki Irie and Imanol Schlag and R\'obert Csord\'as and J\"urgen Schmidhuber},
-      journal={arXiv Preprint: abs/2106.06295},
+      journal={Preprint arXiv:2106.06295},
       year={2021}
 }
 ```
