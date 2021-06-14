@@ -1,13 +1,13 @@
 # Language Modelling with Recurrent Fast Weight Programmers
 
-This repository was originally forked from https://github.com/IDSIA/lmtool-fwp.
+This repository was originally forked from [IDSIA/lmtool-fwp](https://github.com/IDSIA/lmtool-fwp).
 
-**Please refer to the original repository for issues and latest development of this toolkit.**
+**Please refer to the original repository for issues and latest developments of this toolkit.**
 
 ## Requirement
 * PyTorch (PyT = 1.4.0)
 * Ninja (`pip install ninja`)
-* Optionally wandb for monitoring jobs (for disable it by removing the `--use_wandb` flag).
+* Optionally wandb for monitoring jobs (or disable it by removing the `--use_wandb` flag; see below).
 
 ## Training
 We run the following script to train models. 
