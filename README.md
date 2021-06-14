@@ -2,7 +2,7 @@
 
 This is the official repository containing the code we used to produce the experimental results reported in the paper:
 
-[Going Beyond Linear Transformers with Recurrent Fast Weight Programmers](https://arxiv.org) (link coming soon)
+[Going Beyond Linear Transformers with Recurrent Fast Weight Programmers](https://arxiv.org/abs/2106.06295)
 
 ## Contents
 
@@ -30,7 +30,7 @@ Coming soon
 @article{irie2021rfwp,
       title={Going Beyond Linear Transformers with Recurrent Fast Weight Programmers}, 
       author={Kazuki Irie and Imanol Schlag and R\'obert Csord\'as and J\"urgen Schmidhuber},
-      journal={Preprint arxiv TODO},
+      journal={arXiv Preprint: abs/2106.06295},
       year={2021}
 }
 ```
