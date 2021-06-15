@@ -5,6 +5,9 @@ This directory contains code we used for the two algorithmic tasks: code executi
 See Appendix B in our paper for the task descriptions and examples.
 
 ## Data Generation
+
+Dumped datasets can be found [here](https://people.idsia.ch/~kazuki/data/2021_algorithmic/).
+
 * **Code execution**:
 ```
 cd utils
