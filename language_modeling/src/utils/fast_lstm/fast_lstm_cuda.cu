@@ -223,8 +223,7 @@ __global__ void fast_lstm_forward_kernel(
                 shared_kv_i[kv_idx] += shared_keys_i[e_abs] * v_insert_i;
                 shared_kv_u[kv_idx] += shared_keys_u[e_abs] * v_insert_u;
                 shared_kv_o[kv_idx] += shared_keys_o[e_abs] * v_insert_o;
-                __syncthreads();
-                // Compute recurrent preactivation terms 
+                // Compute recurrent preactivation terms
                 resi = shared_states[e] * shared_kv_i[kv_idx];
                 atomicAdd(
                     &shared_gate_i[m],
@@ -757,7 +756,6 @@ __global__ void fast_lstm_backward_kernel(
                 // grad rec weight
                 shared_grad_kv_o[kv_idx] +=
                   shared_res_zo[m] * shared_rnn_out_delayed[e_abs];
-                __syncthreads();
 
                 // grad v
                 float res_v_o = shared_grad_kv_o[kv_idx] * shared_keys_o[e_abs]
@@ -766,7 +764,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_v_o[m],
                     res_v_o
                 );
-                __syncthreads();
 
                 // grad k part 1 and 2
                 float res_k_o = 
@@ -775,7 +772,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_k_o[e],
                     res_k_o
                 );
-                __syncthreads();
 
                 // grad beta
                 float res_b_o = shared_grad_kv_o[kv_idx] * shared_keys_o[e_abs]
@@ -784,7 +780,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_beta_o[0],
                     res_b_o
                 );
-                __syncthreads();
 
                 // pass grad for the next time step.
                 float res_h_o = shared_res_zo[m] * shared_kv_o[kv_idx];
@@ -792,7 +787,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_grad_h[e],
                     res_h_o
                 );  // contribution from output gate
-                __syncthreads();
             }
         }
         __syncthreads();
@@ -825,7 +819,6 @@ __global__ void fast_lstm_backward_kernel(
 
                 shared_grad_kv_u[kv_idx] +=
                   shared_res_zu[m] * shared_rnn_out_delayed[e_abs];
-                __syncthreads();
 
                 // grad v
                 float res_v_i = shared_grad_kv_i[kv_idx] * shared_keys_i[e_abs]
@@ -840,7 +833,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_v_u[m],
                     res_v_u
                 );
-                // __syncthreads();
 
                 // grad k
                 float res_k_i = 
@@ -855,7 +847,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_k_u[e],
                     res_k_u
                 );
-                __syncthreads();
 
                 // grad beta
                 float res_b_i = shared_grad_kv_i[kv_idx] * shared_keys_i[e_abs]
@@ -870,7 +861,6 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_res_beta_u[0],
                     res_b_u
                 );
-                __syncthreads();
 
                 // pass gradients to the next time step
                 float res_h_i = shared_res_zi[m] * shared_kv_i[kv_idx];
@@ -883,9 +873,7 @@ __global__ void fast_lstm_backward_kernel(
                     &shared_grad_h[e],
                     res_h_u
                 );  // contribution from update transformation
-                __syncthreads();
             }
-            __syncthreads();
         }
         __syncthreads();
         for (int sub=0; sub<subblocks_per_seq; sub++) {
@@ -918,7 +906,6 @@ __global__ void fast_lstm_backward_kernel(
                     res_v_old_o
                   );
             }
-            __syncthreads();
         }
         __syncthreads();
         // remaining key grad
@@ -955,7 +942,6 @@ __global__ void fast_lstm_backward_kernel(
                 shared_grad_kv_o[kv_idx] +=
                   shared_grad_v_old_o[m] * shared_keys_o[e_abs];
             }
-            __syncthreads();
         }
         __syncthreads();
 
