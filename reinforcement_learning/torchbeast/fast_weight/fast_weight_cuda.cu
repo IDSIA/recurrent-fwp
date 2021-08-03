@@ -107,15 +107,14 @@ __global__ void fast_weight_forward_kernel(
                 // get old value
                 v_old = shared_kv[threadIdx.x + sub * blockDim.x] *
                   shared_keys[t*E_block + e];
-                __syncthreads();
 
                 atomicAdd(
                     &shared_values_old[m],
                     v_old
                 );
-                __syncthreads();
             }
         }
+        __syncthreads();
 
         // compute new value to be inserted
         if (threadIdx.x < M) {
@@ -132,7 +131,6 @@ __global__ void fast_weight_forward_kernel(
             if (e < E) {
                 shared_kv[threadIdx.x + sub * blockDim.x] +=
                   shared_keys[t*E_block + e] * shared_values_insert[m];
-                __syncthreads();
 
                 res = shared_queries[t*E_block + e]
                   * shared_kv[threadIdx.x + sub * blockDim.x];
@@ -497,7 +495,6 @@ __global__ void fast_weight_backward_value_beta_kernel(
             if (e < E) {
                 shared_kv[threadIdx.x + sub * blockDim.x] +=
                   shared_queries[t*E_block + e] * shared_gradout[t*M + m];
-                __syncthreads();
 
                 float res = shared_keys[t*E_block + e]
                             * shared_kv[threadIdx.x + sub * blockDim.x];
@@ -505,7 +502,6 @@ __global__ void fast_weight_backward_value_beta_kernel(
                     &shared_results[m],
                     res
                 );
-                __syncthreads();
             }
         }
         __syncthreads();
