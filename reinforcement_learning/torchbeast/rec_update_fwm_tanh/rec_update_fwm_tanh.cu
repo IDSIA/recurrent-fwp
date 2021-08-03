@@ -243,15 +243,14 @@ __global__ void rec_update_fwm_tanh_forward_kernel(
             if (e < E) {
                 // get old value
                 v_old = shared_kv[kv_idx] * shared_kr[e];
-                __syncthreads();
 
                 atomicAdd(
                     &shared_v_old[m],
                     v_old
                 );
-                __syncthreads();
             }
         }
+        __syncthreads();
 
         // compute new value to be inserted
         if (threadIdx.x < M) {
@@ -269,7 +268,6 @@ __global__ void rec_update_fwm_tanh_forward_kernel(
             kv_idx = threadIdx.x + sub * blockDim.x;
             if (e < E) {
                 shared_kv[kv_idx] += shared_kr[e] * shared_v_insert[m];
-                __syncthreads();
                 res = shared_qr[e] * shared_kv[kv_idx];
                 atomicAdd(
                     &shared_results[m],
@@ -658,7 +656,6 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
             if (e < E) {
                 // grad rec weight part 1
                 shared_grad_kv[kv_idx] += shared_tmp_grad[m] * shared_q[e_abs];
-                __syncthreads();
 
                 // grad v
                 float res = shared_k[e_abs] * shared_grad_kv[kv_idx] 
@@ -674,7 +671,6 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
                     &shared_grad_k[e],
                     res_k
                 );
-                __syncthreads();
 
                 // grad beta, with sigmoid
                 float grad_b = shared_grad_kv[kv_idx] * shared_k[e_abs]
@@ -683,7 +679,6 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
                     &shared_grad_beta[0],
                     grad_b
                 );  // grad_beta done.
-                __syncthreads();
             }
         }
         __syncthreads();
@@ -702,9 +697,7 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
                   &shared_grad_v_old[m],
                   res_v_old
                 );
-              __syncthreads();
             }
-            __syncthreads();
         }
         __syncthreads();
         // remaining key grad
@@ -722,7 +715,6 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
                 shared_grad_kv[kv_idx] +=
                   shared_grad_v_old[m] * shared_k[e_abs];
             }
-            __syncthreads();
         }
         __syncthreads();
 
@@ -782,7 +774,6 @@ __global__ void rec_update_fwm_tanh_backward_kernel(
                     grad_tmp_v * grad_tanh
                 );
             }
-            __syncthreads();
         }
         __syncthreads();
         for (int sub=0; sub<subblocks_per_seq; sub++) {
