@@ -127,13 +127,11 @@ __global__ void fast_rnn_forward_kernel(
             if (e < E) {
                 // get old value
                 v_old = shared_kv[kv_idx] * shared_keys[e_abs];
-                __syncthreads();
 
                 atomicAdd(
                     &shared_values_old[m],
                     v_old
                 );
-                __syncthreads();
             }
         }
         __syncthreads();
@@ -155,7 +153,6 @@ __global__ void fast_rnn_forward_kernel(
             if (e < E) {
                 // Update fast weights
                 shared_kv[kv_idx] += shared_keys[e_abs] * v_insert;
-                __syncthreads();
 
                 res = shared_states[e] * shared_kv[kv_idx];
                 atomicAdd(
@@ -470,7 +467,6 @@ __global__ void fast_rnn_backward_kernel(
                 // grad rec weight part 1
                 shared_grad_kv[kv_idx] +=
                   shared_res_i[m] * shared_rnn_out_delayed[e_abs];
-                __syncthreads();
 
                 // grad v
                 float res = shared_keys[e_abs] * shared_grad_kv[kv_idx] 
@@ -479,7 +475,6 @@ __global__ void fast_rnn_backward_kernel(
                     &shared_res_v[m],
                     res
                 );
-                __syncthreads();
 
                 // grad k part 1 and 2
                 float res_k = shared_grad_kv[kv_idx] * v_ins;
@@ -487,7 +482,6 @@ __global__ void fast_rnn_backward_kernel(
                     &shared_res_k[e],
                     res_k
                 );
-                __syncthreads();
 
                 // grad beta
                 float res_beta = shared_grad_kv[kv_idx] * shared_keys[e_abs]
@@ -496,14 +490,12 @@ __global__ void fast_rnn_backward_kernel(
                     &shared_res_beta[0],
                     res_beta
                 );
-                __syncthreads();
 
                 float res_h = shared_res_i[m] * shared_kv[kv_idx];
                 atomicAdd(
                     &shared_tmp_grad[e],
                     res_h
                 );
-                __syncthreads();
             }
         }
         __syncthreads();
@@ -521,9 +513,7 @@ __global__ void fast_rnn_backward_kernel(
                   &shared_grad_v_old[m],
                   res_v_old
                 );
-              __syncthreads();
             }
-            __syncthreads();
         }
         __syncthreads();
         // remaining key grad
@@ -541,7 +531,6 @@ __global__ void fast_rnn_backward_kernel(
                 shared_grad_kv[kv_idx] +=
                   shared_grad_v_old[m] * shared_keys[e_abs];
             }
-            __syncthreads();
         }
         __syncthreads();
 
