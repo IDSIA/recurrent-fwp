@@ -2,7 +2,7 @@
 
 This is the official repository containing the code we used to produce the experimental results reported in the paper:
 
-[Going Beyond Linear Transformers with Recurrent Fast Weight Programmers](https://arxiv.org/abs/2106.06295)
+[Going Beyond Linear Transformers with Recurrent Fast Weight Programmers (NeurIPS 2021)](https://arxiv.org/abs/2106.06295)
 
 ## Contents
 
@@ -26,10 +26,11 @@ Important: separate paths should be used for different tasks (i.e. here, one for
 
 ## BibTex
 ```
-@article{irie2021going,
+@inproceedings{irie2021going,
       title={Going Beyond Linear Transformers with Recurrent Fast Weight Programmers}, 
       author={Kazuki Irie and Imanol Schlag and R\'obert Csord\'as and J\"urgen Schmidhuber},
-      journal={Preprint arXiv:2106.06295},
+      booktitle={Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+      address={Virtual only},
       year={2021}
 }
 ```
