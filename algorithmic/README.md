@@ -6,7 +6,7 @@ See Appendix B in our paper for the task descriptions and examples.
 
 ## Data Generation
 
-Dumped datasets can be found [here](https://people.idsia.ch/~kazuki/data/2021_algorithmic/).
+Dumped datasets can be found [here](https://drive.google.com/file/d/1L3qYsWksEDqkLFc0X0foowfluF1Nyby-/view?usp=sharing).
 
 * **Code execution**:
 ```
